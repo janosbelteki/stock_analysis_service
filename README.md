@@ -45,7 +45,7 @@ None.
 {   // Within each price type or volume, all values are calculated for a period of 7 days (5 workdays) or 30 days
     "close":
         {   
-            TOP_STOCK+"_correlation_coeff": dict{str : float64}  //Pearson corr. coeff.
+            "TOP_STOCK"+"_correlation_coeff": dict{str : float64}  //Pearson corr. coeff.
             "avg_daily_return": dict{str : float64}  // Avg daily return of current price
             "risk_reward_ratio": dict{str : float64}  // RRO of current price
             "total_return": dict{str : float64}  // Total return of current price
