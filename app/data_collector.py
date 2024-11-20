@@ -1,9 +1,12 @@
 import logging
+import sqlite3
 from datetime import datetime, timedelta, timezone
+
 import requests
+
 from app.db_config import DB_PATH
 from app.db_utils import get_db_connection
-import sqlite3
+
 
 def fetch_stock_data(symbol, start_date=None, end_date=None):
     """
@@ -57,6 +60,7 @@ def fetch_stock_data(symbol, start_date=None, end_date=None):
             return parsed_data
     else:
         logging.error(f"Failed to fetch data for {symbol}: {response.status_code}")
+
 
 def save_to_db(symbol, data):
     """
@@ -113,6 +117,7 @@ def save_to_db(symbol, data):
             logging.error(f"Data for {symbol} already exists in the database.")
         else:
             logging.error(f"Error while saving data to the database: {e}")
+
 
 def get_raw_data_from_db(symbol):
     """

@@ -1,7 +1,10 @@
-from flask import Flask
-from app.logging_config import configure_logging
 import os
+
+from flask import Flask
+
 from app.db_config import DB_PATH, init_db
+from app.logging_config import configure_logging
+
 
 def create_app():
     app = Flask(__name__)

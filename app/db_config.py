@@ -1,6 +1,8 @@
-import yaml
 import logging
 import sqlite3
+
+import yaml
+
 from app.db_utils import get_db_connection
 
 TABLE_SCHEMAS = {
@@ -29,14 +31,16 @@ TABLE_SCHEMAS = {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(symbol, category, analysis_type, period)
         )
-    """
+    """,
 }
 
-def validate_config(config: dict) -> None:
+
+def validate_config(config: dict):
     required_keys = ["db_path"]
     for key in required_keys:
         if key not in config:
             raise ValueError(f"Missing required configuration key: {key}")
+
 
 with open("config.yaml", "r") as file:
     config = yaml.safe_load(file)
@@ -44,7 +48,8 @@ with open("config.yaml", "r") as file:
 
 DB_PATH = config["db_path"]
 
-def init_db() -> None:
+
+def init_db():
     try:
         logging.info("Initializing database...")
         with get_db_connection(DB_PATH) as conn:

@@ -1,20 +1,24 @@
+import logging
+import sqlite3
+from datetime import datetime, timedelta
+
+import numpy as np
+import pandas as pd
+import pytz
+from dateutil.relativedelta import relativedelta
+
+from app.data_collector import fetch_stock_data, save_to_db
 from app.db_config import DB_PATH
 from app.db_utils import get_db_connection
-from datetime import datetime, timedelta
-import logging
-from dateutil.relativedelta import relativedelta
-import pytz
-from app.data_collector import fetch_stock_data, save_to_db
-import numpy as np
-import sqlite3
-import pandas as pd
 
-def analyze_stock_data(symbol: str):
+
+def analyze_stock_data(symbol):
     """
     Fetch data from the database and perform analysis for the specified stock symbol.
     """
     data = get_stock_data_from_db_for_last_thirty_days(symbol)
     return perform_comprehensive_analysis(symbol, data)
+
 
 def get_stock_data_from_db_for_last_thirty_days(symbol):
     thirty_days_ago_str = check_date_and_update_database_if_needed(symbol)
@@ -41,7 +45,8 @@ def get_stock_data_from_db_for_last_thirty_days(symbol):
             }
             for row in rows
         ]
-    
+
+
 def check_date_and_update_database_if_needed(symbol):
     with get_db_connection(DB_PATH) as conn:
         cursor = conn.cursor()
@@ -58,12 +63,12 @@ def check_date_and_update_database_if_needed(symbol):
                 f"Invalid date format in database: {latest_date_str}. Error: {e}"
             )
             start_date = None
-        end_date = get_last_trading_day(
-            datetime.now(pytz.timezone("America/New_York"))
-        )
-        
+        end_date = get_last_trading_day(datetime.now(pytz.timezone("America/New_York")))
+
         if start_date is None or start_date < end_date.date():
-            logging.info(f"Fetching data for {symbol} from {start_date} to {end_date.date()}")
+            logging.info(
+                f"Fetching data for {symbol} from {start_date} to {end_date.date()}"
+            )
             data = fetch_stock_data(
                 symbol,
                 start_date=start_date + timedelta(days=1) if start_date else None,
@@ -76,7 +81,8 @@ def check_date_and_update_database_if_needed(symbol):
 
         thirty_days_ago = end_date - timedelta(days=30)
         return thirty_days_ago.strftime("%Y-%m-%d")
-    
+
+
 def get_last_trading_day(date: datetime.date) -> datetime.date:
     """
     Returns the last trading day before the given date.
@@ -86,6 +92,7 @@ def get_last_trading_day(date: datetime.date) -> datetime.date:
     if date.weekday() in {5, 6}:
         return date - relativedelta(weekday=4)
     return date - timedelta(days=1)
+
 
 def perform_comprehensive_analysis(symbol, data):
     """
@@ -260,7 +267,7 @@ def add_top_stock_correlation_to_analysis(
         )
 
 
-def get_top_stock_by_dollar_volume_over_period(symbol, period: int):
+def get_top_stock_by_dollar_volume_over_period(symbol, period):
     with get_db_connection(DB_PATH) as conn:
         try:
             cursor = conn.cursor()

@@ -1,12 +1,15 @@
-from flask import Flask, jsonify, request
-from app.logging_config import configure_logging
 import logging
-from app.data_collector import fetch_stock_data, save_to_db, get_raw_data_from_db
-from app.error_handler import error_response
+
+from flask import Flask, jsonify, request
+
 from app import create_app
+from app.data_collector import fetch_stock_data, get_raw_data_from_db, save_to_db
 from app.data_processor import analyze_stock_data
+from app.error_handler import error_response
+from app.logging_config import configure_logging
 
 app = create_app()
+
 
 @app.route("/collect", methods=["POST"])
 def collect_data():
@@ -34,11 +37,13 @@ def collect_data():
         )
     except Exception as e:
         return error_response(str(e), 400)
-    
+
+
 @app.route("/get/<symbol>", methods=["GET"])
 def get_raw_data_for_symbol(symbol):
     raw_data = get_raw_data_from_db(symbol)
     return jsonify(raw_data), 200
+
 
 @app.route("/analyze/<symbol>", methods=["GET"])
 def analyze(symbol):
