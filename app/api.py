@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from app.logging_config import configure_logging
 import logging
-from app.data_collector import fetch_stock_data, save_to_db
+from app.data_collector import fetch_stock_data, save_to_db, get_raw_data_from_db
 from app.error_handler import error_response
 from app import create_app
 
@@ -38,3 +38,7 @@ def collect_data():
 def get_raw_data_for_symbol(symbol):
     raw_data = get_raw_data_from_db(symbol)
     return jsonify(raw_data), 200
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
