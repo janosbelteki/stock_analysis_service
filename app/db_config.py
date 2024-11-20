@@ -16,6 +16,19 @@ TABLE_SCHEMAS = {
             volume REAL,
             UNIQUE(symbol, date)
         )
+    """,
+    "stock_analysis": """
+        CREATE TABLE IF NOT EXISTS stock_analysis (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            symbol TEXT NOT NULL,
+            top_stock_symbol TEXT,
+            category TEXT NOT NULL,
+            analysis_type TEXT NOT NULL,
+            period INTEGER NOT NULL,
+            value REAL NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(symbol, category, analysis_type, period)
+        )
     """
 }
 
