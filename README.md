@@ -51,30 +51,30 @@ None.
             "total_return": dict{str : float64}  // Total return of current price
             "trend": dict{str : float64}  // Slope of linear fit for current price
             "volatility": dict{str : float64}  // Volatility of current price
-    },
+        },
     "high":
         {
             "avg_daily_return": dict{str : float64}  // Avg daily return of current price
             "trend": dict{str : float64}  // Slope of linear fit for current price
             "volatility": dict{str : float64}  // Volatility of current price
-    },
+        },
     "low":
         {
             "avg_daily_return": dict{str : float64}  // Avg daily return of current price
             "trend": dict{str : float64}  // Slope of linear fit for current price
             "volatility": dict{str : float64}  // Volatility of current price
-    },
+        },
     "open":
         {
             "avg_daily_return": dict{str : float64}  // Avg daily return of current price
             "trend": dict{str : float64}  // Slope of linear fit for current price
             "volatility": dict{str : float64}  // Volatility of current price
-    },
+        },
     "volume":
         {
             "avg": dict{str : float64}  // Average of current stock volume
             "volatility": dict{str : float64}  // Volatility of stock volume
-    }
+        }
 }
 ```
     
