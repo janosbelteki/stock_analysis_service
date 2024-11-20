@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 import requests
 from app.db_config import DB_PATH
 from app.db_utils import get_db_connection
+import sqlite3
 
 def fetch_stock_data(symbol, start_date=None, end_date=None):
     """
@@ -112,3 +113,36 @@ def save_to_db(symbol, data):
             logging.error(f"Data for {symbol} already exists in the database.")
         else:
             logging.error(f"Error while saving data to the database: {e}")
+
+def get_raw_data_from_db(symbol):
+    """
+    Retrieve raw stock data for a specific symbol from the database.
+    """
+    try:
+        with get_db_connection(DB_PATH) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT date, open_price, close_price, high_price, low_price, volume
+                FROM stock_prices
+                WHERE symbol = ?
+                ORDER BY date
+            """,
+                (symbol,),
+            )
+            rows = cursor.fetchall()
+
+        raw_data = [
+            {
+                "date": row[0],
+                "open": row[1],
+                "close": row[2],
+                "high": row[3],
+                "low": row[4],
+                "volume": row[5],
+            }
+            for row in rows
+        ]
+        return raw_data
+    except sqlite3.Error as e:
+        raise RuntimeError(f"Error fetching raw data for symbol {symbol}: {e}")

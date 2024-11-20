@@ -33,3 +33,8 @@ def collect_data():
         )
     except Exception as e:
         return error_response(str(e), 400)
+    
+@app.route("/get/<symbol>", methods=["GET"])
+def get_raw_data_for_symbol(symbol):
+    raw_data = get_raw_data_from_db(symbol)
+    return jsonify(raw_data), 200
