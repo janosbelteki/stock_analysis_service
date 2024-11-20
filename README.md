@@ -16,74 +16,93 @@ This project provides a microservice for collecting, processing, and analyzing s
 3. Provides a REST API for accessing raw data.
 
 ## API (matching stated features)
-1. Collect stock data
-    path: POST http://127.0.0.1:5000/collect
-    params: -
-    request body: 
+
+### 1. Collect Stock Data
+**Path**:  
+`POST http://127.0.0.1:5000/collect`
+
+**Params**:  
+None.
+
+**Request Body**:  
+```json
+{
+    "symbols": ["str"]  // List of stock symbols to download from the Yahoo Finance API
+}
+```
+### 2. Analyze stock data
+ **Path**:  
+`GET http://127.0.0.1:5000/analyze/{symbol}`
+
+**Params**:  
+None.
+
+**Request Body**:
+None.
+
+**Response Body**:
+```json
+{   // Within each price type or volume, all values are calculated for a period of 7 days (5 workdays) or 30 days
+    "close":
+        {   
+            TOP_STOCK+"_correlation_coeff": dict{str : float64}  //Pearson corr. coeff.
+            "avg_daily_return": dict{str : float64}  // Avg daily return of current price
+            "risk_reward_ratio": dict{str : float64}  // RRO of current price
+            "total_return": dict{str : float64}  // Total return of current price
+            "trend": dict{str : float64}  // Slope of linear fit for current price
+            "volatility": dict{str : float64}  // Volatility of current price
+    },
+    "high":
         {
-            "symbols": [ str ]   // List of stock symbols to download from the Yahoo Finance API
-        }
-    response body:
+            "avg_daily_return": dict{str : float64}  // Avg daily return of current price
+            "trend": dict{str : float64}  // Slope of linear fit for current price
+            "volatility": dict{str : float64}  // Volatility of current price
+    },
+    "low":
         {
-            "status": str,                                                           // The status of the operation (e.g., "success" or "error").
-            "message": str                                                           // A descriptive message providing details about the result.
-        }
-2. Analyze stock data
-    path: GET http://127.0.0.1:5000/analyze/{symbol}
-    params: -
-    request body: -
-    response body:
+            "avg_daily_return": dict{str : float64}  // Avg daily return of current price
+            "trend": dict{str : float64}  // Slope of linear fit for current price
+            "volatility": dict{str : float64}  // Volatility of current price
+    },
+    "open":
         {
-            "close":
-                {
-                    TOP_STOCK_SYMBOL+"_correlation_coeff":  dict{str : float64}      // Current stock's and top performing stock's Pearson correlation coefficients for a period (7 or 30 days) 
-                    "avg_daily_return":  dict{str : float64}                         // Average daily return of current stock price for a period (7 or 30 days)
-                    "risk_reward_ratio":  dict{str : float64}                        // Risk reward ratio of current stock price for a period (7 or 30 days)
-                    "total_return":  dict{str : float64}                             // Total return of current stock price for a period (7 or 30 days)
-                    "trend":  dict{str : float64}                                    // Slope of linear fit of current stock price for a period (7 or 30 days)
-                    "volatility":  dict{str : float64}                               // Volatility of current stock price for a period (7 or 30 days)
-            },
-            "high":
-                {
-                    "avg_daily_return":  dict{str : float64}                         // Average daily return of current stock price for a period (7 or 30 days)
-                    "trend":  dict{str : float64}                                    // Slope of linear fit of current stock price for a period (7 or 30 days)
-                    "volatility":  dict{str : float64}                               // Volatility of current stock price for a period (7 or 30 days)
-            },
-            "low":
-                {
-                    "avg_daily_return":  dict{str : float64}                         // Average daily return of current stock price for a period (7 or 30 days)
-                    "trend":  dict{str : float64}                                    // Slope of linear fit of current stock price for a period (7 or 30 days)
-                    "volatility":  dict{str : float64}                               // Volatility of current stock price for a period (7 or 30 days)
-            },
-            "open":
-                {
-                    "avg_daily_return":  dict{str : float64}                         // Average daily return of current stock price for a period (7 or 30 days)
-                    "trend":  dict{str : float64}                                    // Slope of linear fit of current stock price for a period (7 or 30 days)
-                    "volatility":  dict{str : float64}                               // Volatility of current stock price for a period (7 or 30 days)
-            },
-            "volume":
-                {
-                    "avg":  dict{str : float64}                                      // Average of current stock volume for a period (7 or 30 days)
-                    "volatility":  dict{str : float64}                               // Volatility of current stock volume for a period (7 or 30 days)
-            }
-        }
-3. Get all-time raw data for stock
-    path: GET http://127.0.0.1:5000/get/{symbol}
-    params: -
-    request body: -
-    response body:
+            "avg_daily_return": dict{str : float64}  // Avg daily return of current price
+            "trend": dict{str : float64}  // Slope of linear fit for current price
+            "volatility": dict{str : float64}  // Volatility of current price
+    },
+    "volume":
         {
-            [
-                {
-                    "close": float64,                                                // Close price on the given day ("date")
-                    "date": str,                                                     // Date the price data belongs to
-                    "high": float64,                                                 // High price on the given day ("date")
-                    "low": float64,                                                  // Low price on the given day ("date")
-                    "open": float64,                                                 // Open price on the given day ("date")
-                    "volume": float64                                                // Volume on the given day ("date")
-                },
-            ]
-        }
+            "avg": dict{str : float64}  // Average of current stock volume
+            "volatility": dict{str : float64}  // Volatility of stock volume
+    }
+}
+```
+    
+### 3. Get all-time raw data for stock
+ **Path**: 
+ `GET http://127.0.0.1:5000/get/{symbol}`
+
+**Params**:  
+None.
+
+**Request Body**:
+None.
+
+**Response Body**:
+```json
+{
+    [
+        {
+            "close": float64,              // Close price on the given day ("date")
+            "date": str,                   // Date the price data belongs to
+            "high": float64,               // High price on the given day ("date")
+            "low": float64,                // Low price on the given day ("date")
+            "open": float64,               // Open price on the given day ("date")
+            "volume": float64              // Volume on the given day ("date")
+        },
+    ]
+}
+```
 
 ## Setup
 1. Clone the repository.
